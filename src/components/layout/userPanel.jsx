@@ -1,6 +1,8 @@
 import React, { Fragment } from "react";
+import { connect } from "react-redux";
+import { logoutStart } from "../../redux/user/user.actions";
 
-const UserPanel = () => {
+const UserPanel = ({ logoutStart }) => {
   return (
     <Fragment>
       <div id="kt_quick_user" className="offcanvas offcanvas-right p-10">
@@ -84,6 +86,7 @@ const UserPanel = () => {
                 </a>
                 <a
                   href="/"
+                  onClick={logoutStart}
                   className="btn btn-sm btn-light-primary font-weight-bolder py-2 px-5"
                 >
                   Sign Out
@@ -103,4 +106,8 @@ const UserPanel = () => {
   );
 };
 
-export default UserPanel;
+const mapDispatchToProps = (dispatch) => ({
+  logoutStart: () => dispatch(logoutStart()),
+});
+
+export default connect(null, mapDispatchToProps)(UserPanel);

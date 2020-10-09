@@ -1,4 +1,5 @@
 import { all, call, put, takeLatest } from "redux-saga/effects";
+import { commonApi } from "../../utils/utility";
 
 import {
   loginFailure,
@@ -9,9 +10,21 @@ import {
 
 import UserActionTypes from "./user.types";
 
-export function* login({ payload: { username, password } }) {
+export function* login({ payload: { email, password } }) {
   try {
-    const user = {};
+    const request = {
+      email,
+      password,
+      user_type: "buyer",
+    };
+    const response = yield call(commonApi, `users/login`, request, "post");
+    // console.log(response);
+    // TODO: check response code etc and finish the login logic code
+    // console.log("email", email, "password", password);
+    const user = response.data.data;
+    localStorage.setItem("auth_token", response.data.token);
+    // console.log("login user", user);
+    // we will check for login success and set some values in local storage and dispatch or put login success action
     yield put(loginSuccess(user));
   } catch (error) {
     yield put(loginFailure(error));
@@ -20,6 +33,7 @@ export function* login({ payload: { username, password } }) {
 
 export function* logout() {
   try {
+    localStorage.setItem("auth_token", "");
     yield put(logoutSuccess());
   } catch (error) {
     yield put(logoutFailure(error));

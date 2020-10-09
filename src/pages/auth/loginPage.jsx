@@ -1,7 +1,34 @@
-import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
+import React, { Fragment, useState } from "react";
+import { connect } from "react-redux";
+import { Link, Redirect } from "react-router-dom";
+import { createStructuredSelector } from "reselect";
 
-const LoginPage = () => {
+import { loginStart } from "../../redux/user/user.actions";
+import { selectCurrentUser } from "../../redux/user/user.selectors";
+
+const LoginPage = ({ loginStart, currentUser }) => {
+  const [userCredential, setUserCredential] = useState({
+    email: "",
+    password: "",
+  });
+
+  const { email, password } = userCredential;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserCredential({ ...userCredential, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // console.log("form submitted", e.target);
+    loginStart(email, password);
+  };
+
+  if (currentUser) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <Fragment>
       <div className="d-flex flex-column flex-root">
@@ -37,13 +64,19 @@ const LoginPage = () => {
                     Enter your details to login to your account:
                   </p>
                 </div>
-                <form className="form" id="kt_login_signin_form">
+                <form
+                  className="form"
+                  id="kt_login_signin_form"
+                  onSubmit={handleSubmit}
+                >
                   <div className="form-group">
                     <input
                       className="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
                       type="text"
                       placeholder="Email"
-                      name="username"
+                      name="email"
+                      onChange={handleChange}
+                      value={email}
                       autoComplete="off"
                     />
                   </div>
@@ -53,6 +86,9 @@ const LoginPage = () => {
                       type="password"
                       placeholder="Password"
                       name="password"
+                      onChange={handleChange}
+                      value={password}
+                      autoComplete="off"
                     />
                   </div>
                   <div className="form-group d-flex flex-wrap justify-content-between align-items-center px-8 opacity-60">
@@ -92,7 +128,6 @@ const LoginPage = () => {
                 </div>
               </div>
               {/* <!--end::Login Sign in form--> */}
-             
             </div>
           </div>
         </div>
@@ -102,4 +137,12 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+const mapDisptachToProps = (dispatch) => ({
+  loginStart: (email, password) => dispatch(loginStart({ email, password })),
+});
+
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser,
+});
+
+export default connect(mapStateToProps, mapDisptachToProps)(LoginPage);

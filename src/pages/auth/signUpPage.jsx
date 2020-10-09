@@ -73,7 +73,7 @@ const SignUpPage = () => {
                     <label className="checkbox checkbox-outline checkbox-white opacity-60 text-white m-0">
                       <input type="checkbox" name="agree" />I Agree the &nbsp;
                       <a href="/#" className="text-white font-weight-bold">
-                         terms and conditions
+                        terms and conditions
                       </a>
                       . <span></span>
                     </label>
@@ -85,7 +85,7 @@ const SignUpPage = () => {
                       className="btn btn-pill btn-primary opacity-90 px-15 py-3 m-2"
                     >
                       Sign Up
-                    </button>                    
+                    </button>
                   </div>
                 </form>
                 <div className="mt-10">
@@ -102,7 +102,6 @@ const SignUpPage = () => {
                 </div>
               </div>
               {/* <!--end::Login Sign up form--> */}
-             
             </div>
           </div>
         </div>
