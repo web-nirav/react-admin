@@ -27,3 +27,7 @@ export const logoutFailure = (error) => ({
   type: UserActionTypes.LOGOUT_FAILURE,
   payload: error,
 });
+
+export const resetErrors = () => ({
+  type: UserActionTypes.RESET_ERRORS,
+});

@@ -66,7 +66,7 @@ export const commonApi = (
         }
       })
       .catch((error) => {
-        console.log("error is ", error);
+        // console.log("error is ", error);
         reject(error);
       });
   });

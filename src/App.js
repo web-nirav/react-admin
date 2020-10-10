@@ -5,6 +5,8 @@ import HomePage from "./pages/homepage/homePage";
 import LoginPage from "./pages/auth/loginPage";
 import SignUpPage from "./pages/auth/signUpPage";
 import ForgotPasswordPage from "./pages/auth/forgotPasswordPage";
+import UsersListPage from "./pages/users/usersListPage";
+import UsersAddPage from "./pages/users/usersAddPage";
 
 const authCheck = () => {
   return localStorage.getItem("auth_token") ? true : false;
@@ -35,6 +37,8 @@ const App = () => {
     <Fragment>
       <Switch>
         <PrivateRoute exact path="/" component={HomePage} />
+        <PrivateRoute exact path="/users" component={UsersListPage} />
+        <PrivateRoute exact path="/create" component={UsersAddPage} />
 
         <LoginSignupRoute exact path="/login" component={LoginPage} />
         <LoginSignupRoute exact path="/signup" component={SignUpPage} />

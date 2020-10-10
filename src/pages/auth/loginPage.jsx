@@ -1,16 +1,29 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { createStructuredSelector } from "reselect";
 
-import { loginStart } from "../../redux/user/user.actions";
-import { selectCurrentUser } from "../../redux/user/user.selectors";
+import { loginStart, resetErrors } from "../../redux/user/user.actions";
+import {
+  selectCurrentUser,
+  selectLoginError,
+} from "../../redux/user/user.selectors";
+import { validationMessages } from "../../utils/validationMessages";
 
-const LoginPage = ({ loginStart, currentUser }) => {
+const LoginPage = ({ loginStart, currentUser, loginError, resetErrors }) => {
   const [userCredential, setUserCredential] = useState({
     email: "",
     password: "",
   });
+
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    return () => {
+      resetErrors();
+      // console.log("unmounted");
+    };
+  }, [resetErrors]);
 
   const { email, password } = userCredential;
 
@@ -19,15 +32,45 @@ const LoginPage = ({ loginStart, currentUser }) => {
     setUserCredential({ ...userCredential, [name]: value });
   };
 
+  const validateForm = () => {
+    let { email, password } = userCredential;
+
+    let errors = {};
+    let isValid = true;
+    var pattern = new RegExp(
+      /^(([^<>()+*[\]\\.,;:\s@"]+(\.[^<>()+*[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+
+    if (!pattern.test(email)) {
+      isValid = false;
+      if (!email || email.trim() === "") {
+        errors["email"] = validationMessages.email;
+      } else errors["email"] = validationMessages.validEmail;
+    }
+
+    if (!password || password.trim() === "") {
+      isValid = false;
+      errors["password"] = validationMessages.password;
+    }
+
+    setErrors(errors);
+    return isValid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("form submitted", e.target);
+    if (!validateForm()) {
+      return;
+    }
+    // console.log("form submitted", userCredential);
     loginStart(email, password);
   };
 
   if (currentUser) {
     return <Redirect to="/" />;
   }
+
+  // console.log("loginError", loginError);
 
   return (
     <Fragment>
@@ -69,6 +112,18 @@ const LoginPage = ({ loginStart, currentUser }) => {
                   id="kt_login_signin_form"
                   onSubmit={handleSubmit}
                 >
+                  {loginError && (
+                    <div className="fv-plugins-message-container mb-10">
+                      <div
+                        data-field="password"
+                        data-validator="notEmpty"
+                        className="fv-help-block"
+                      >
+                        {loginError.error.message}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="form-group">
                     <input
                       className="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
@@ -79,6 +134,15 @@ const LoginPage = ({ loginStart, currentUser }) => {
                       value={email}
                       autoComplete="off"
                     />
+                    <div className="fv-plugins-message-container">
+                      <div
+                        data-field="email"
+                        data-validator="notEmpty"
+                        className="fv-help-block"
+                      >
+                        {errors.email}
+                      </div>
+                    </div>
                   </div>
                   <div className="form-group">
                     <input
@@ -90,6 +154,15 @@ const LoginPage = ({ loginStart, currentUser }) => {
                       value={password}
                       autoComplete="off"
                     />
+                    <div className="fv-plugins-message-container">
+                      <div
+                        data-field="password"
+                        data-validator="notEmpty"
+                        className="fv-help-block"
+                      >
+                        {errors.password}
+                      </div>
+                    </div>
                   </div>
                   <div className="form-group d-flex flex-wrap justify-content-between align-items-center px-8 opacity-60">
                     <label className="checkbox checkbox-outline checkbox-white text-white m-0">
@@ -139,10 +212,12 @@ const LoginPage = ({ loginStart, currentUser }) => {
 
 const mapDisptachToProps = (dispatch) => ({
   loginStart: (email, password) => dispatch(loginStart({ email, password })),
+  resetErrors: () => dispatch(resetErrors()),
 });
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
+  loginError: selectLoginError,
 });
 
 export default connect(mapStateToProps, mapDisptachToProps)(LoginPage);

@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { Link } from "react-router-dom";
 
 const Aside = () => {
   return (
@@ -65,7 +66,7 @@ const Aside = () => {
             {/* <!--begin::Menu Nav--> */}
             <ul className="menu-nav">
               <li className="menu-item" aria-haspopup="true">
-                <a href="index.html" className="menu-link">
+                <Link to="/" className="menu-link">
                   <span className="svg-icon menu-icon">
                     {/* <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Layers.svg--> */}
                     <svg
@@ -98,7 +99,7 @@ const Aside = () => {
                     {/* <!--end::Svg Icon--> */}
                   </span>
                   <span className="menu-text">Dashboard</span>
-                </a>
+                </Link>
               </li>
               <li className="menu-section">
                 <h4 className="menu-text">Custom</h4>
@@ -174,27 +175,21 @@ const Aside = () => {
                         <i className="menu-arrow"></i>
                         <ul className="menu-subnav">
                           <li className="menu-item" aria-haspopup="true">
-                            <a
-                              href="custom/apps/user/list-default.html"
-                              className="menu-link"
-                            >
+                            <Link to="/users" className="menu-link">
                               <i className="menu-bullet menu-bullet-dot">
                                 <span></span>
                               </i>
                               <span className="menu-text">List</span>
-                            </a>
+                            </Link>
                           </li>
 
                           <li className="menu-item" aria-haspopup="true">
-                            <a
-                              href="custom/apps/user/add-user.html"
-                              className="menu-link"
-                            >
+                            <Link to="/users/create" className="menu-link">
                               <i className="menu-bullet menu-bullet-dot">
                                 <span></span>
                               </i>
                               <span className="menu-text">Add User</span>
-                            </a>
+                            </Link>
                           </li>
                         </ul>
                       </div>

@@ -18,16 +18,12 @@ export function* login({ payload: { email, password } }) {
       user_type: "buyer",
     };
     const response = yield call(commonApi, `users/login`, request, "post");
-    // console.log(response);
-    // TODO: check response code etc and finish the login logic code
-    // console.log("email", email, "password", password);
     const user = response.data.data;
     localStorage.setItem("auth_token", response.data.token);
-    // console.log("login user", user);
     // we will check for login success and set some values in local storage and dispatch or put login success action
     yield put(loginSuccess(user));
   } catch (error) {
-    yield put(loginFailure(error));
+    yield put(loginFailure(error.response.data));
   }
 }
 

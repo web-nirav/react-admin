@@ -5,6 +5,7 @@ const UserActionTypes = {
   LOGOUT_START: "LOGOUT_START",
   LOGOUT_SUCCESS: "LOGOUT_SUCCESS",
   LOGOUT_FAILURE: "LOGOUT_FAILURE",
+  RESET_ERRORS: "RESET_ERRORS",
 };
 
 export default UserActionTypes;
