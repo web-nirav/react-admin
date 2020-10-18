@@ -6,6 +6,12 @@ import {
   loginSuccess,
   logoutSuccess,
   logoutFailure,
+  getUserListSuccess,
+  getUserListFailure,
+  addUpdateUserSuccess,
+  addUpdateUserFailure,
+  getUserDetailFailure,
+  getUserDetailSuccess,
 } from "./user.actions";
 
 import UserActionTypes from "./user.types";
@@ -36,6 +42,59 @@ export function* logout() {
   }
 }
 
+export function* getUserList(action) {
+  try {
+    // console.log("action", action);
+    const page = action.payload ?? 1;
+    const response = yield call(
+      commonApi,
+      `users?page=${page}`,
+      "",
+      "GET",
+      true
+    );
+    const users = yield response.data.success.data;
+    // console.log("users", users);
+    yield put(getUserListSuccess(users));
+  } catch (error) {
+    yield put(getUserListFailure(error.response.data));
+  }
+}
+
+export function* addUpdateUser(action) {
+  try {
+    const apiUrl = `users`;
+    const response = yield call(
+      commonApi,
+      apiUrl,
+      action.payload,
+      "POST",
+      true
+    );
+    if (response && response.status === 200) {
+      yield put(addUpdateUserSuccess());
+    }
+  } catch (error) {
+    yield put(addUpdateUserFailure(error));
+  }
+}
+
+export function* getUserDetail(action) {
+  try {
+    const response = yield call(
+      commonApi,
+      `users/${action.payload}`,
+      "",
+      "GET",
+      true
+    );
+    const userDetail = yield response.data.success.data;
+    yield put(getUserDetailSuccess(userDetail));
+  } catch (error) {
+    yield put(getUserDetailFailure(error));
+  }
+}
+
 export function* onLoginStart() {
   yield takeLatest(UserActionTypes.LOGIN_START, login);
 }
@@ -44,6 +103,24 @@ export function* onLogoutStart() {
   yield takeLatest(UserActionTypes.LOGOUT_START, logout);
 }
 
+export function* onGetUserListStart() {
+  yield takeLatest(UserActionTypes.GET_USER_LIST_START, getUserList);
+}
+
+export function* onAddUpdateUserStart() {
+  yield takeLatest(UserActionTypes.ADD_UPDATE_USER_START, addUpdateUser);
+}
+
+export function* onGetUserDetailStart() {
+  yield takeLatest(UserActionTypes.GET_USER_DETAIL_START, getUserDetail);
+}
+
 export function* userSagas() {
-  yield all([call(onLoginStart), call(onLogoutStart)]);
+  yield all([
+    call(onLoginStart),
+    call(onLogoutStart),
+    call(onGetUserListStart),
+    call(onAddUpdateUserStart),
+    call(onGetUserDetailStart),
+  ]);
 }

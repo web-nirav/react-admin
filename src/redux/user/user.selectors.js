@@ -11,3 +11,15 @@ export const selectLoginError = createSelector(
   selectUser,
   (user) => user.error
 );
+
+export const selectUsersList = createSelector(selectUser, (user) => user.users);
+
+export const selectUserDetail = createSelector(
+  selectUser,
+  (user) => user.userDetail
+);
+
+export const selectIsSuccessfulAddUpdate = createSelector(
+  selectUser,
+  (user) => user.isSuccessfulAddUpdate
+);

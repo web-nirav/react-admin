@@ -184,7 +184,7 @@ const Aside = () => {
                           </li>
 
                           <li className="menu-item" aria-haspopup="true">
-                            <Link to="/users/create" className="menu-link">
+                            <Link to="/users_create" className="menu-link">
                               <i className="menu-bullet menu-bullet-dot">
                                 <span></span>
                               </i>
