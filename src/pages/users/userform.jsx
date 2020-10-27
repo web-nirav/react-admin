@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from 'react-redux';
+import { createStructuredSelector } from "reselect";
 
-const UserForm = ({ onSubmit }) => {
+import cogoToast from 'cogo-toast';
+
+import { selectLoginError } from "../../redux/user/user.selectors";
+
+const UserForm = ({ onSubmit, loginError }) => {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -29,6 +35,15 @@ const UserForm = ({ onSubmit }) => {
 
     onSubmit(user);
   };
+
+  useEffect(() => {
+
+    if(loginError){
+      cogoToast.error(loginError.error.message, {position: 'top-right'});
+    }
+  }, [loginError])
+
+  
 
   return (
     <div className="card card-custom card-stretch">
@@ -266,4 +281,8 @@ const UserForm = ({ onSubmit }) => {
   );
 };
 
-export default UserForm;
+const mapStateToProps = createStructuredSelector({
+  loginError: selectLoginError,
+})
+
+export default connect(mapStateToProps)(UserForm);

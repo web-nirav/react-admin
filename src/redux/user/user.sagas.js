@@ -75,7 +75,7 @@ export function* addUpdateUser(action) {
       yield put(addUpdateUserSuccess());
     }
   } catch (error) {
-    yield put(addUpdateUserFailure(error));
+    yield put(addUpdateUserFailure(error.response.data));
   }
 }
 

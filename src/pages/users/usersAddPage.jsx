@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
+import cogoToast from 'cogo-toast';
 
 import { createStructuredSelector } from "reselect";
 
@@ -15,6 +16,7 @@ const UsersAddPage = ({ addUpdateUser, isSuccessfulAddUpdate }) => {
   };
 
   if (isSuccessfulAddUpdate) {
+    cogoToast.success('User added successfully.', {position: 'top-right'});
     return <Redirect to="/users" />;
   }
 
